@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 import { Question } from '../entities/question.entity';
 import { CreateQuestionDto } from '../dtos/CreateQuestion.dto';
-import { Quiz } from '../../quiz/entities/quiz.entity';
+import { Quiz } from '../entities/quiz.entity';
 
 @Injectable()
 export class QuestionService {
@@ -14,20 +14,27 @@ export class QuestionService {
   ) {}
 
   getQuestions() {
-    return this.questionRepository.find();
+    return this.questionRepository.find({ relations: ['options', 'quiz'] });
   }
 
-  getQuestion(id: any) {
-    return this.questionRepository.findOne({
+  async getQuestion(id: any): Promise<Question> {
+    const result = await this.questionRepository.findOne({
       where: { id },
+      relations: ['options', 'quiz'],
     });
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 
   async createQuestion(
     question: CreateQuestionDto,
     quiz: Quiz,
   ): Promise<Question> {
-    const newData = await this.questionRepository.save(question);
+    const newData = await this.questionRepository.save({
+      question: question.question,
+    });
 
     quiz.questions = [...quiz.questions, newData];
     await quiz.save();

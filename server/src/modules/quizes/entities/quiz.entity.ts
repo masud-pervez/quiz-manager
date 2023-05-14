@@ -1,4 +1,3 @@
-import { Question } from 'src/modules/quizes/question/entities/question.entity';
 import {
   BaseEntity,
   Column,
@@ -6,6 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Question } from './question.entity';
 
 @Entity('quizes')
 export class Quiz extends BaseEntity {

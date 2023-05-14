@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { QuestionService } from '../services/question.service';
 import { CreateQuestionDto } from '../dtos/CreateQuestion.dto';
-import { QuizService } from '../../quiz/services/quiz.service';
-import { UUIDParam } from 'src/common/decorators/http.decorators';
+import { QuizService } from '../services/quiz.service';
 
-@Controller('questions')
+@Controller('question')
 export class QuestionController {
   constructor(
     private questionService: QuestionService,
@@ -23,17 +22,17 @@ export class QuestionController {
     };
   }
 
-  @Get('/:id')
-  async getQuiz(@UUIDParam('id') id: string) {
-    console.log('params:', id);
-    const result = await this.questionService.getQuestion(id);
-    return {
-      success: true,
-      message: `Details Quiz of id: ${id}`,
-      statusCode: 200,
-      data: result,
-    };
-  }
+  // @Get('/:id')
+  // async getQuiz(@UUIDParam('id') id: string) {
+  //   console.log('params:', id);
+  //   const result = await this.questionService.getQuestion(id);
+  //   return {
+  //     success: true,
+  //     message: `Details Quiz of id: ${id}`,
+  //     statusCode: 200,
+  //     data: result,
+  //   };
+  // }
 
   @Post('/')
   async createQuestion(@Body() question: CreateQuestionDto) {
