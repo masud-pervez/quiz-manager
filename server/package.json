@@ -2,7 +2,7 @@
   "name": "server",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Masud Pervez",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -21,9 +21,12 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
+    "@types/bcrypt": "^5.0.0",
+    "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "pg": "^8.10.0",

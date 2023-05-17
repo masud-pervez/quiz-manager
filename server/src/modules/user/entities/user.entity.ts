@@ -1,6 +1,15 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
-@Entity('users')
+@Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -8,6 +17,21 @@ export class User extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
-  phone: number;
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @CreateDateColumn({ nullable: true })
+  createdAt: Date;
+
+  @UpdateDateColumn({ nullable: true })
+  updatedAt: Date;
+
+  @BeforeInsert()
+  async setPassword(password: string) {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(password || this.password, salt);
+  }
 }

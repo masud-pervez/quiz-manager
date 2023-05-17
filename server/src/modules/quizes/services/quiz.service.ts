@@ -11,14 +11,20 @@ export class QuizService {
     private readonly quizRepository: Repository<Quiz>,
   ) {}
 
-  getQuizes() {
-    return this.quizRepository.find({ relations: ['questions'] });
+  async getQuizes() {
+    const result = await this.quizRepository
+      .createQueryBuilder('q')
+      .leftJoinAndSelect('q.questions', 'qt')
+      .leftJoinAndSelect('qt.options', 'o')
+      .getManyAndCount();
+
+    return result;
   }
 
   async getQuiz(id: any) {
     const result = await this.quizRepository.findOne({
       where: { id },
-      relations: ['questions'],
+      relations: ['questions', 'questions.options'],
     });
     if (!result) {
       throw new NotFoundException();

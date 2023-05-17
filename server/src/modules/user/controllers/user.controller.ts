@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { CreateUserDto } from '../dtos/CreateUser.dto';
 import { UUIDParam } from 'src/common/decorators/http.decorators';
+import { UserRegisterRequestDto } from '../dtos/user-register.req.dto';
+import { User } from '../entities/user.entity';
+import { UpdateUserDto } from '../dtos/UpdateUserDto';
 
 @Controller('user')
 export class UserController {
@@ -32,14 +41,22 @@ export class UserController {
     };
   }
 
-  @Post()
-  async createUser(@Body() user: CreateUserDto) {
-    const result = await this.userService.createUser(user);
+  @Post('/register')
+  async createUser(
+    @Body(ValidationPipe) userRegister: UserRegisterRequestDto,
+  ): Promise<User> {
+    return await this.userService.createUser(userRegister);
+  }
+
+  @Put(':id')
+  async update(
+    @UUIDParam('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const result = await this.userService.updateUser(updateUserDto);
 
     return {
-      success: true,
-      statusCode: 201,
-      message: `User created`,
+      status: true,
       data: result,
     };
   }

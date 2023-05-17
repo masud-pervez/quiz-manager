@@ -10,6 +10,7 @@ export class QuizController {
   @Get('/')
   async getQuizes() {
     const result = await this.quizService.getQuizes();
+
     return {
       success: true,
       statusCode: 200,
